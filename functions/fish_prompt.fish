@@ -203,7 +203,7 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
 
   # Support for `nix shell` command in nix 2.4+. Only the packages passed on the command line are
   # available in PATH, so it is useful to print them all.
-  set nix_packages
+  set -gx nix_packages
   for p in $PATH
     set package_name_version (string match --regex '/nix/store/\w+-([^/]+)/.*' $p)[2]
     if test "$package_name_version"
