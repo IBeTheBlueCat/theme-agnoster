@@ -131,7 +131,7 @@ function cwd_in_scm_blacklist
 end
 
 function filter_envs
-  set -gx envs_filtered # create new list that will eventually be displayed
+  set -e envs_filtered # create new list that will eventually be displayed
   for package in $envs_unfiltered # loop through aggregated packages
     if not contains $package $theme_env_packages_hide # check whether the current package is allowed
       set envs_filtered $envs_filtered $package # if package is allowed, add it to the $envs_filtered list
@@ -233,7 +233,7 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
     # Support for `nix-shell -p`. Would print "nix[foo bar baz]".
     # We check for this case after checking for "impure" because impure brings too many packages 
     # into PATH.
-    set -gx envs_unfiltered $nix_packages # passes nix packages to the filter function
+    set envs_unfiltered $nix_packages # passes nix packages to the filter function
     filter_envs
     if test -n "$envs_filtered"
       set envs $envs "nix[$envs_filtered]" # appends the result to $envs, but only if theres packages present
