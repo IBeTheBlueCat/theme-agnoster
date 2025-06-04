@@ -14,7 +14,7 @@
 # set -g default_user your_normal_user
 # set -g theme_svn_prompt_enabled yes
 # set -g theme_mercurial_prompt_enabled yes
-
+# set -g theme_env_packages_hide package1 package2 package3...
 
 
 set -g current_bg NONE
@@ -24,6 +24,7 @@ set -q scm_prompt_blacklist; or set -g scm_prompt_blacklist
 set -q max_package_count_visible_in_prompt; or set -g max_package_count_visible_in_prompt 10
 # We support trimming the version only in simple cases, such as "1.2.3".
 set -q try_to_trim_nix_package_version; or set -g try_to_trim_nix_package_version yes
+set -q theme_env_packages_hide; or set -g theme_env_packages_hide
 
 # ===========================
 # Color setting
@@ -180,7 +181,7 @@ end
 
 function prompt_virtual_env -d "Display Python or Nix virtual environment"
   set envs
-
+ 
   if test "$CONDA_DEFAULT_ENV"
     set envs $envs "conda[$CONDA_DEFAULT_ENV]"
   end
@@ -229,6 +230,13 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
     # confuse the user into believing when they are in a pure shell, after they have invoked 
     # `nix shell` from within it.
     set envs $envs "nix[$IN_NIX_SHELL]"
+  end
+
+  for package in $theme_env_packages_hide
+    if contains $package $envs
+      set indexToRemove contains --index $package $envs
+      set -e $envs[$indexToRemove]
+    end
   end
 
   if test "$envs"
