@@ -24,7 +24,7 @@ set -q scm_prompt_blacklist; or set -g scm_prompt_blacklist
 set -q max_package_count_visible_in_prompt; or set -g max_package_count_visible_in_prompt 10
 # We support trimming the version only in simple cases, such as "1.2.3".
 set -q try_to_trim_nix_package_version; or set -g try_to_trim_nix_package_version yes
-set -q theme_env_packages_hide; or set -g theme_env_packages_hide
+set -q theme_env_packages_hide; or set -g theme_env_packages_hide binutils-wrapper hyprland-qtutils pciutils pkgconf-wrapper
 
 # ===========================
 # Color setting
