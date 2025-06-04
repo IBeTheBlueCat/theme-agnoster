@@ -236,7 +236,6 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
     set package -g $package # TESTING
     if contains $package $envs
       contains --index $package $envs | set indexToRemove
-      set indexToRemove -g $indexToRemove # TESTING
       echo $indexToRemove # TESTING
       set -e envs[$indexToRemove]
     end
