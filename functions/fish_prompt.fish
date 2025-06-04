@@ -235,7 +235,7 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
     # We check for this case after checking for "impure" because impure brings too many packages 
     # into PATH.
     set envs_unfiltered $nix_packages # passes nix packages to the filter function
-    set $nix_packages_filtered (filter_envs) = passes the result of the filter function back
+    set $nix_packages_filtered (filter_envs) # passes the result of the filter function back
     set envs $envs "nix[$nix_packages_filtered]" # appends the result to $envs
   else if test "$IN_NIX_SHELL"
     # Support for `nix-shell --pure`. Would print "nix[pure]".
