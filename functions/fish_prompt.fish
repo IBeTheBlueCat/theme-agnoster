@@ -234,9 +234,7 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
 
   for package in $theme_env_packages_hide
     if contains $package $envs
-      echo $package
-      contains --index $package $envs | set indexToRemove
-      echo $indexToRemove # TESTING
+      set indexToRemove (contains --index $package $envs)
       set -e envs[$indexToRemove]
     end
   end
