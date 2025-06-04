@@ -130,6 +130,17 @@ function cwd_in_scm_blacklist
   end
 end
 
+function filter_envs -d "filters disallowed programs out the $envs_unfiltered variable and returns only allowed ones"
+  set -e envs_filtered # create new list that will eventually be displayed
+  for package in $envs_unfiltered # loop through aggregated packages
+    if not contains $package $theme_env_packages_hide # check whether the current package is allowed
+      set envs_filtered $envs_filtered $package # if package is allowed, add it to the $envs_filtered list
+    end
+  end
+  return $envs_filtered # returns the filtered envs
+end
+  
+
 # ===========================
 # Segments functions
 # ===========================
@@ -223,7 +234,9 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
     # Support for `nix-shell -p`. Would print "nix[foo bar baz]".
     # We check for this case after checking for "impure" because impure brings too many packages 
     # into PATH.
-    set envs $envs "nix[$nix_packages]"
+    set envs_unfiltered $nix_packages # passes nix packages to the filter function
+    set $nix_packages_filtered (filter_envs) = passes the result of the filter function back
+    set envs $envs "nix[$nix_packages_filtered]" # appends the result to $envs
   else if test "$IN_NIX_SHELL"
     # Support for `nix-shell --pure`. Would print "nix[pure]".
     # We check for this case after checking for individual packages because it otherwise might 
@@ -232,15 +245,8 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
     set envs $envs "nix[$IN_NIX_SHELL]"
   end
 
-  set -gx envs_filtered # create new list that will eventually be displayed
-  for package in $envs # loop through aggregated packages
-    if not contains $package $theme_env_packages_hide # check whether the current package is allowed
-      set envs_filtered $envs_filtered $package # if package is allowed, add it to the $envs_filtered list
-    end
-  end
-  
-  if test "$envs_filtered"
-    prompt_segment $color_virtual_env_bg $color_virtual_env_str (string join " " $envs_filtered)
+  if test "$envs"
+    prompt_segment $color_virtual_env_bg $color_virtual_env_str (string join " " $envs)
   end
 end
 
