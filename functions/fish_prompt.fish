@@ -232,15 +232,15 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
     set envs $envs "nix[$IN_NIX_SHELL]"
   end
 
-  for package in $theme_env_packages_hide
-    if contains $package $envs
-      set indexToRemove (contains --index $package $envs)
-      set -e envs[$indexToRemove]
+  set envs_filtered
+  for package in $envs
+    if not contains $package $theme_env_packages_hide
+      set envs_filtered $envs_filtered $package
     end
   end
   
-  if test "$envs"
-    prompt_segment $color_virtual_env_bg $color_virtual_env_str (string join " " $envs)
+  if test "$envs_filtered"
+    prompt_segment $color_virtual_env_bg $color_virtual_env_str (string join " " $envs_filtered)
   end
 end
 
